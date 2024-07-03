@@ -1,5 +1,5 @@
 import express from "express";
-
+import cors from "cors";
 import mongoose from "mongoose";
 
 import {
@@ -20,6 +20,12 @@ mongoose
   .catch((err) => console.log("DB error ", err));
 
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:3000', // або інший ваш клієнтський URL
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 app.use(express.json());
 

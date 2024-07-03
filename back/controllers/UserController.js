@@ -11,7 +11,6 @@ export const register = async (req, res) => {
     const doc = new UserModel({
       email: req.body.email,
       fullName: req.body.fullName,
-      avatarURL: req.body.avatarURL,
       passwordHash: hash,
     });
 
@@ -29,11 +28,11 @@ export const register = async (req, res) => {
 
     const { passwordHash, ...userData } = user._doc;
 
-    res.json({ ...userData, token });
+    res.json({ ...userData, token, message: "Register complete" });
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      message: "Failed to register",
+      message: "User with this email alrredy exists",
     });
   }
 };
@@ -71,7 +70,7 @@ export const login = async (req, res) => {
 
     const { passwordHash, ...userData } = user._doc;
 
-    res.json({ ...userData, token });
+    res.json({ ...userData, token, message: "Login complete" });
   } catch (err) {
     console.log(err);
     res.status(500).json({
