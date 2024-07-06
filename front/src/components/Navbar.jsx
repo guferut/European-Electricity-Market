@@ -58,11 +58,11 @@ export const Navbar = () => {
         </ul>
       )}
 
-      <div className="flex justify-center items-center bg-gray-600 text-xs text-white rounded-sm px-4 py-2">
+      <div>
         {isAuth ? (
-          <button onClick={logoutHandler}>Log out</button>
+          <button className='bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg' onClick={logoutHandler}>Log out</button>
         ) : (
-          <Link to={"/login"}> Log in </Link>
+            <Link className="flex justify-center items-center bg-gray-600 text-xs text-white rounded-sm px-4 py-2" to={"/login"}> Log in </Link>
         )}
       </div>
     </div>

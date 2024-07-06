@@ -32,7 +32,10 @@ const EntitiesPage = () => {
                     return false; // Handle case where entity.user or entity.user._id is missing
                 });
 
-                console.log('Filtered entities:', filteredEntities);
+                // Sort entities by created date in descending order
+                filteredEntities.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                console.log('Filtered and sorted entities:', filteredEntities);
                 setEntities(filteredEntities);
             } else {
                 setError('Data received is not an array: ' + JSON.stringify(data));
