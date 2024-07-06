@@ -16,13 +16,13 @@ mongoose
   .connect(
     "mongodb+srv://sanchobregin:test123@cluster0.hlcldmp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
   )
-  .then(() => console.log("DB is Ok"))
-  .catch((err) => console.log("DB error ", err));
+  .then(() => console.log("Підключення до бази даних успішне"))
+  .catch((err) => console.error("Помилка підключення до бази даних:", err));
 
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:3000', 
+  origin: 'http://localhost:3000',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -30,7 +30,7 @@ app.use(cors({
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("111 hello wrld");
+  res.send("Привіт, світ!");
 });
 
 app.post(
@@ -64,10 +64,15 @@ app.patch(
   handleValidationErrors,
   EntityController.update
 );
+app.put(
+  "/entities/:id",
+  checkAuth,
+  entityCreateValidation,
+  handleValidationErrors,
+  EntityController.update
+);
 
-app.listen(1924, (err) => {
-  if (err) {
-    return console.log(err);
-  }
-  console.log("server good");
+const PORT = process.env.PORT || 1924;
+app.listen(PORT, () => {
+  console.log(`Сервер запущено на http://localhost:${PORT}`);
 });

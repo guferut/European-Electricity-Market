@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Navigate, NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { checkIsAuth, logout } from "../redux/features/auth/authSlice";
 import { toast } from "react-toastify";
@@ -11,12 +11,15 @@ export const Navbar = () => {
 
   const activeStyles = {
     color: "white",
+    fontWeight: "bold",
+    borderBottom: "2px solid white",
+    paddingBottom: "2px",
   };
 
   const logoutHandler = () => {
     dispatch(logout());
     window.localStorage.removeItem("token");
-    toast("Вы вышли из системы");
+    toast("You have logged out");
   };
 
   return (
@@ -28,31 +31,28 @@ export const Navbar = () => {
           <li>
             <NavLink
               to={"/"}
-              href="/"
-              className="text-xs text-gray-400 hover:text-white"
-              style={({ isActive }) => (isActive ? activeStyles : undefined)}
+              className="text-xl text-gray-400 hover:text-white"
+              activeStyle={activeStyles}
             >
-              Главная
+              Home
             </NavLink>
           </li>
           <li>
             <NavLink
-              to={"/posts"}
-              href="/"
-              className="text-xs text-gray-400 hover:text-white"
-              style={({ isActive }) => (isActive ? activeStyles : undefined)}
+              to={"/entities"}
+              className="text-xl text-gray-400 hover:text-white"
+              activeStyle={activeStyles}
             >
-              Мои посты
+              My Entities
             </NavLink>
           </li>
           <li>
             <NavLink
               to={"/new"}
-              href="/"
-              className="text-xs text-gray-400 hover:text-white"
-              style={({ isActive }) => (isActive ? activeStyles : undefined)}
+              className="text-xl text-gray-400 hover:text-white"
+              activeStyle={activeStyles}
             >
-              Добавить пост
+              Add Entity
             </NavLink>
           </li>
         </ul>

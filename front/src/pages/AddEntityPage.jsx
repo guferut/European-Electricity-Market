@@ -1,32 +1,53 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { createEntity } from "../redux/features/entity/entitySlice";
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
+import { createEntity } from '../redux/features/entity/entitySlice';
 
-export const AddEntityPage = () => {
-  const [name, setName] = useState("");
-  const [country, setCountry] = useState("");
-  const [marketShare, setMarketShare] = useState("");
-  const [renewableEnergy, setRenewableEnergy] = useState("");
-  const [yearlyRevenue, setYearlyRevenue] = useState("");
-
-  const dispatch = useDispatch();
+const AddEntityPage = () => {
+  const [name, setName] = useState('');
+  const [country, setCountry] = useState('');
+  const [marketShare, setMarketShare] = useState('');
+  const [renewableEnergy, setRenewableEnergy] = useState('');
+  const [yearlyRevenue, setYearlyRevenue] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const submitHandler = async () => {
+  const validateInputs = () => {
+    if (!name || !country || !marketShare || !renewableEnergy || !yearlyRevenue) {
+      toast.error('Please fill in all fields.');
+      return false;
+    }
+
+    if (isNaN(parseFloat(marketShare)) || isNaN(parseFloat(renewableEnergy)) || isNaN(parseFloat(yearlyRevenue))) {
+      toast.error('Market Share, Renewable Energy, and Yearly Revenue must be numbers.');
+      return false;
+    }
+
+    return true;
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
     try {
+      if (!validateInputs()) return;
+
       const data = {
         name,
         country,
-        marketShare,
-        renewableEnergy,
-        yearlyRevenue,
+        marketShare: parseFloat(marketShare),
+        renewableEnergy: parseFloat(renewableEnergy),
+        yearlyRevenue: parseFloat(yearlyRevenue),
       };
+
       await dispatch(createEntity(data)).unwrap();
-      navigate('/')
+      toast.success('Entity created successfully');
+      navigate('/');
     } catch (error) {
-      console.error("Failed to create entity:", error);
+      console.error('Failed to create entity:', error);
+      toast.error(`Failed to create entity: ${error.message}`);
     }
   };
 
@@ -36,77 +57,78 @@ export const AddEntityPage = () => {
     setMarketShare('');
     setRenewableEnergy('');
     setYearlyRevenue('');
-
-  }
+  };
 
   return (
-    <form className="w-1/3 mx-auto py-10" onSubmit={(e) => e.preventDefault()}>
-      <label className="text-xs text-white opacity-70">
-        Provider name:
+    <div className="w-1/2 mx-auto py-10">
+      <h2 className="text-2xl font-bold text-white mb-4">Edit Entity</h2>
+
+      <label className="text-white block mb-4">
+        Name:
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
-          className="mt-1 text-black w-full rounded-lg bg-gray-400 border py-1 px-2 text-xs outline-none placeholder:text-gray-700"
+          className="ml-2 py-1 px-2 rounded-lg bg-gray-300 text-black outline-none w-full"
         />
       </label>
 
-      <label className="text-xs text-white opacity-70">
-        Provider country:
+      <label className="text-white block mb-4">
+        Country:
         <input
           type="text"
-          onChange={(e) => setCountry(e.target.value)}
           value={country}
-          placeholder="Country"
-          className="mt-1 text-black w-full rounded-lg bg-gray-400 border py-1 px-2 text-xs outline-none placeholder:text-gray-700"
+          onChange={(e) => setCountry(e.target.value)}
+          className="ml-2 py-1 px-2 rounded-lg bg-gray-300 text-black outline-none w-full"
         />
       </label>
 
-      <label className="text-xs text-white opacity-70">
-        Market share:
+      <label className="text-white block mb-4">
+        Market Share:
         <input
           type="text"
-          onChange={(e) => setMarketShare(e.target.value)}
           value={marketShare}
-          placeholder="Market share"
-          className="mt-1 text-black w-full rounded-lg bg-gray-400 border py-1 px-2 text-xs outline-none placeholder:text-gray-700"
-        />
-      </label>
-      <label className="text-xs text-white opacity-70">
-        Renewable energy:
-        <input
-          type="text"
-          onChange={(e) => setRenewableEnergy(e.target.value)}
-          value={renewableEnergy}
-          placeholder="Renewable energy"
-          className="mt-1 text-black w-full rounded-lg bg-gray-400 border py-1 px-2 text-xs outline-none placeholder:text-gray-700"
-        />
-      </label>
-      <label className="text-xs text-white opacity-70">
-        Yearly revenue:
-        <input
-          type="text"
-          onChange={(e) => setYearlyRevenue(e.target.value)}
-          value={yearlyRevenue}
-          placeholder="Yearly revenue"
-          className="mt-1 text-black w-full rounded-lg bg-gray-400 border py-1 px-2 text-xs outline-none placeholder:text-gray-700"
+          onChange={(e) => setMarketShare(e.target.value)}
+          className="ml-2 py-1 px-2 rounded-lg bg-gray-300 text-black outline-none w-full"
         />
       </label>
 
-      <div className="flex gap-8 items-center justify-center mt-4">
+      <label className="text-white block mb-4">
+        Renewable Energy:
+        <input
+          type="text"
+          value={renewableEnergy}
+          onChange={(e) => setRenewableEnergy(e.target.value)}
+          className="ml-2 py-1 px-2 rounded-lg bg-gray-300 text-black outline-none w-full"
+        />
+      </label>
+
+      <label className="text-white block mb-4">
+        Yearly Revenue:
+        <input
+          type="text"
+          value={yearlyRevenue}
+          onChange={(e) => setYearlyRevenue(e.target.value)}
+          className="ml-2 py-1 px-2 rounded-lg bg-gray-300 text-black outline-none w-full"
+        />
+      </label>
+
+      <div className="flex justify-end">
         <button
           onClick={submitHandler}
-          className="flex justify-center items-center bg-gray-600 text-xs text-white rounded-sm py-2 px-4"
+          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg mr-2"
         >
           Add
         </button>
-
-        <button onClick={clearFormHandler} className="flex justify-center items-center bg-red-500 text-xs text-white rounded-sm py-2 px-4">
-          
+        <button
+          onClick={clearFormHandler}
+          className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg"
+        >
           Cancel
         </button>
       </div>
-    </form>
+    </div>
   );
 };
+
+export default AddEntityPage;

@@ -6,12 +6,10 @@ const entitySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
     country: {
       type: String,
       required: true,
     },
-
     marketShare: {
       type: Number,
       required: true,
@@ -26,12 +24,12 @@ const entitySchema = new mongoose.Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "User", // Посилання на модель User
       required: true,
     },
   },
   {
-    timestamps: true,
+    timestamps: true, // Автоматично управляти полями createdAt та updatedAt
   }
 );
 
